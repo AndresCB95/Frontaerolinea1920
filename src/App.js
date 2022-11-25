@@ -6,10 +6,16 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import VerVuelos from './componentes/VerVuelos'
+import VerReservas from './componentes/VerReservas';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 //< >
 function App() {
+  if(localStorage.getItem("id_client")==null){
+    localStorage.setItem("id_client","1")
+  }
+
+
   return (
     <>
     <BrowserRouter>
@@ -17,7 +23,7 @@ function App() {
         <Container>
           <Navbar.Brand href="/vervuelos">Vuelos</Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link href="#home">Ver Reservas</Nav.Link>
+            <Nav.Link href="/verreservas">Ver Reservas</Nav.Link>
             <Nav.Link href="#features">Ver Pagos</Nav.Link>
           </Nav>
         </Container>
@@ -25,6 +31,8 @@ function App() {
 
     <Routes>
       <Route path='/vervuelos' element={<VerVuelos/>}/>
+      <Route path='/verreservas' element={<VerReservas/>}/>
+      
     </Routes>
     </BrowserRouter>
     </>
