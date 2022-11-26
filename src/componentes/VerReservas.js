@@ -25,8 +25,44 @@ const VerReservas = () => {
         }
     */
 
+        /*
+
+            {
+                "valorTotal":0,
+                "id_reserva":"",
+                "estado_pago":"",
+                "medio_pago":{}
+            }
+        */
+
     const [reserva, setReserva] = useState({})
     const [valorTotal, setValorTotal] = useState(0)
+    const [medioPagoSelect, setMedioPagoSelect] = useState("")
+    const [mediopagos, setMedioPagos] = useState(
+        [
+            {
+                "banco":"Banco Udea",
+                "medio":"TC",
+                "franquicia":"VIUDEA"
+            },
+            {
+                "banco":"Banco AntUdea",
+                "medio":"TC",
+                "franquicia":"VIUDEA"
+            },
+            {
+                "banco":"Banco Udea",
+                "medio":"TD",
+                "franquicia":"VIUDEA"
+            },
+            {
+                "banco":"Banco Udea",
+                "medio":"CA",
+                "franquicia":"VIUDEA"
+            }
+        ]
+        )
+
 
     useEffect(
         ()=>{
@@ -57,7 +93,33 @@ const VerReservas = () => {
         []
         )
     
-    
+    const request_pago= (id_reserva)=>{
+        const pago = {
+            "valorTotal":valorTotal,
+            "id_reserva":id_reserva,
+            "estado_pago":"Aprobado",
+            "medio_pago":JSON.parse(medioPagoSelect)
+        }
+
+        fetch("http://localhost:8083/pagos",
+        {
+            method:"POST",
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(pago)
+        })
+        .then(
+            (respuesta)=>{
+                alert("PAGO REGISTRADO")
+            }
+        )
+        .catch(
+            (error)=>{
+                alert("ERROR EN EL PAGO")
+            }
+        )
+    }
 
     return(
         <Table striped bordered hover>
@@ -92,8 +154,38 @@ const VerReservas = () => {
         }
        
        <tr>
+       <td></td>
+       <td></td>
+       <td>Valor Total </td>
+       <td>{valorTotal}</td>
+       <td>
+       <Form.Select aria-label="Default select example"
+       onChange={
+        (evento)=>{setMedioPagoSelect(evento.target.value)}
+       }
+       >
+                <option>Seleciona Medio Pago</option>
+                {
+                    mediopagos.map(
+                        (medioPago,index)=>{
+                            return(
+                                <option value={JSON.stringify(medioPago)}>{medioPago.banco} - {medioPago.medio}</option>
+                            )
+                        }
+                    )
+                }
+        </Form.Select>
+        </td>
 
-       <td>Valor Total {valorTotal}</td>
+        <td>
+            <Button variant="primary"
+                onClick={
+                    (evento)=>{
+                        request_pago(reserva._id)
+                    }
+                }
+            >Pagar Reserva</Button>
+        </td>
 
        </tr>
        
